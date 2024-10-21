@@ -3,39 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="stylesheet.css">
+  
+    <!--  Wrong For Some Reasson -->
+    <!--  <link rel="stylesheet" href="stylesheet.css">  -->
+
   <title>DB Project 1 new</title>
 </head>
 <body>
-  <main>
-      <label>Name:</label>
-      <input type="text" id="name-input">
-      <button id="add-name-btn">Add Name</button>
- 
-     <br><br><br>
-     <div> 
-        <input placeholder="search by name" id="search-input">
-        <button id="search-btn">Search</button>
-     </div>
+    <main>
+        <h2>Add User</h2>
+        <label>Username:</label>
+        <input type="text" id="username-input" required>
+        <label>Password:</label>
+        <input type="password" id="password-input" required>
+        <label>First Name:</label>
+        <input type="text" id="firstname-input" required>
+        <label>Last Name:</label>
+        <input type="text" id="lastname-input" required>
+        <label>Salary:</label>
+        <input type="number" id="salary-input" step="0.01" required>
+        <label>Age:</label>
+        <input type="number" id="age-input" required>
+        <label>Register Day:</label>
+        <input type="date" id="registerday-input" required>
+        <label>Sign-in Time:</label>
+        <input type="datetime-local" id="signintime-input" required>
+        <button id="add-user-btn">Add User</button>
 
-
-     <table id="table">
-         <thead>
-             <th>Id</th>
-             <th>Name</th>
-             <th>Date Added</th>
-             <th>Delete</th>
-             <th>Edit</th>  
-         </thead>
-         <tbody></tbody>
-     </table>
-
-     <section hidden id="update-row">
-         <label>Name:</label>
-         <input type="text" id="update-name-input">
-         <button id="update-row-btn" value="">Update</button>
-    </section>
-</main>
-<script src="index.js"></script>
+        <h2>Users</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Salary</th>
+                    <th>Age</th>
+                    <th>Register Day</th>
+                    <th>Sign-in Time</th>
+                    <th>Delete</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+    <script src="index.js"></script>
 </body>
 </html>
