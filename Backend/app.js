@@ -1,141 +1,70 @@
-// Backend: application services, accessible by URIs
-
-
-const express = require('express')
-const cors = require ('cors')
-const dotenv = require('dotenv')
-dotenv.config()
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
-
 const dbService = require('./dbService');
 
-
 app.use(cors());
-app.use(express.json())
-app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// create
-app.post('/insert', (request, response) => {
-    console.log("app: insert a row.");
-    // console.log(request.body); 
-
-    const {name} = request.body;
+// Create a new user
+app.post('/createUser', (request, response) => {
+    const { username, password, firstname, lastname, salary, age, registerday, signintime } = request.body;
     const db = dbService.getDbServiceInstance();
 
-    const result = db.insertNewName(name);
- 
-    // note that result is a promise
-    result 
-    .then(data => response.json({data: data})) // return the newly added row to frontend, which will show it
-   // .then(data => console.log({data: data})) // debug first before return by response
-   .catch(err => console.log(err));
+    const result = db.createUser({ username, password, firstname, lastname, salary, age, registerday, signintime });
+    result
+        .then(data => response.json({ success: true, data: data }))
+        .catch(err => {
+            console.error(err);
+            response.status(500).json({ success: false });
+        });
 });
 
-
-
-
-// read 
-app.get('/getAll', (request, response) => {
-    
+// Get all users
+app.get('/getAllUsers', (request, response) => {
     const db = dbService.getDbServiceInstance();
-
-    
-    const result =  db.getAllData(); // call a DB function
+    const result = db.getAllUsers();
 
     result
-    .then(data => response.json({data: data}))
-    .catch(err => console.log(err));
+        .then(data => response.json({ data: data }))
+        .catch(err => {
+            console.error(err);
+            response.status(500).json({ success: false });
+        });
 });
 
-
-app.get('/search/:name', (request, response) => { // we can debug by URL
-    
-    const {name} = request.params;
-    
-    console.log(name);
-
+// Update a user
+app.patch('/updateUser', (request, response) => {
+    const { username, firstname, lastname, salary, age } = request.body;
     const db = dbService.getDbServiceInstance();
 
-    let result;
-    if(name === "all") // in case we want to search all
-       result = db.getAllData()
-    else 
-       result =  db.searchByName(name); // call a DB function
-
+    const result = db.updateUserById(username, { firstname, lastname, salary, age });
     result
-    .then(data => response.json({data: data}))
-    .catch(err => console.log(err));
+        .then(data => response.json({ success: data }))
+        .catch(err => {
+            console.error(err);
+            response.status(500).json({ success: false });
+        });
 });
 
-
-// update
-app.patch('/update', 
-     (request, response) => {
-          console.log("app: update is called");
-          //console.log(request.body);
-          const{id, name} = request.body;
-          console.log(id);
-          console.log(name);
-          const db = dbService.getDbServiceInstance();
-
-          const result = db.updateNameById(id, name);
-
-          result.then(data => response.json({success: true}))
-          .catch(err => console.log(err)); 
-
-     }
-);
-
-// delete service
-app.delete('/delete/:id', 
-     (request, response) => {     
-        const {id} = request.params;
-        console.log("delete");
-        console.log(id);
-        const db = dbService.getDbServiceInstance();
-
-        const result = db.deleteRowById(id);
-
-        result.then(data => response.json({success: true}))
-        .catch(err => console.log(err));
-     }
-)   
-
-// debug function, will be deleted later
-app.post('/debug', (request, response) => {
-    // console.log(request.body); 
-
-    const {debug} = request.body;
-    console.log(debug);
-
-    return response.json({success: true});
-});   
-
-// debug function: use http://localhost:5050/testdb to try a DB function
-// should be deleted finally
-app.get('/testdb', (request, response) => {
-    
+// Delete a user
+app.delete('/deleteUser/:username', (request, response) => {
+    const { username } = request.params;
     const db = dbService.getDbServiceInstance();
 
-    
-    const result =  db.deleteById("14"); // call a DB function here, change it to the one you want
-
+    const result = db.deleteUserById(username);
     result
-    .then(data => response.json({data: data}))
-    .catch(err => console.log(err));
+        .then(data => response.json({ success: data }))
+        .catch(err => {
+            console.error(err);
+            response.status(500).json({ success: false });
+        });
 });
 
-
-  
-
-
-
-
-
-// set up the web server listener
-app.listen(process.env.PORT, 
-    () => {
-        console.log("I am listening.")
-    }
-);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is listening on port ${process.env.PORT}`);
+});
